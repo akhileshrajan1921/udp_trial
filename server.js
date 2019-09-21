@@ -58,7 +58,14 @@ app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
 app.get('/', function (req, res) {
-    res.render('index.html',{message:message,ts:ts});
+    
+    var sample = message.split(",");
+    var lat = sample[2];
+    console.log("latitude " + lat);
+    var lon = sample[4];
+    console.log("latitude " + lon);
+
+    res.render('index.html',{lat:lat,lon:lon});
 });
 
 app.listen(80, function () { 
