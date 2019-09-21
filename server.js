@@ -7,7 +7,8 @@ var server = dgram.createSocket('udp6');
 const sqlite3 = require('sqlite3').verbose();
 var ts = Date.now();
 
-var message;
+var message = "";
+var lat = "",lon = "";
 
 var db = new sqlite3.Database('aerophilia.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
     (err) => {
@@ -26,6 +27,11 @@ try {
 server.on('message', (msg, rinfo) => {
     //console.log("hello boo");
     message = msg;
+    var sample = message.split(",");
+    lat = sample[2];
+    console.log("latitude " + lat);
+    lon = sample[4];
+    console.log("latitude " + lon);
     db.run(`INSERT INTO data(timestamp,value) VALUES(?,?)`, [ts, msg], function (err) {
         if (err) {
             console.log(err);
@@ -58,12 +64,8 @@ app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
 app.get('/', function (req, res) {
-    
-    var sample = message.split(",");
-    var lat = sample[2];
-    console.log("latitude " + lat);
-    var lon = sample[4];
-    console.log("latitude " + lon);
+
+    // message = ;
 
     res.render('index.html',{lat:lat,lon:lon});
 });
